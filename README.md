@@ -1,6 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Project Assignment:
+All code was completed within the 4 hour time frame, any uncompleted tasks are marked with a "To-Do" comment detailing the steps needed to be completed
+
+#### Project Assignment:
 Write a weather app in React that will allow a user to pick a location by entering a zip code, and display a five-day forecast for that location. Clicking on any day in the five-day forecast will change the display to show details about that day — it is left for you to decide which details to display, but those could include an hourly forecast, wind and precipitation information, etc. There should also be a way to navigate back to the five-day forecast and select a different day. The forecast is automatically refreshed every five minutes.
 
 Stretch goal 1:
@@ -10,13 +12,14 @@ Allow a user to select a list of locations, rather than just one. The user shoul
 Stretch goal 2: 
 
 Do not use a CSS framework such as bootstrap or foundation, but rather write your own CSS.
-Assumptions Made:
+
+#### Assumptions Made:
 - All valid zip codes entered will be located in the United States - any zip code from another country will result in an error. 
 
-Resources Used:
+#### Resources Used:
 - https://openweathermap.org/api used for fetching weather data
 
-Read below for instructions to run/test code:
+#### Read below for instructions to run/test code:
 
 ## Available Scripts
 
