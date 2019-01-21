@@ -1,28 +1,109 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import {
+    BrowserRouter,
+    Route
+} from 'react-router-dom';
+import Search from './Search';
+import Header from './Header';
+import Weather from "./Weather";
+import DailyDetails from "./DailyDetails";
+
 import './App.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            zip: undefined,
+            city: undefined,
+            startingDate: undefined,
+            forecast: undefined,
+            error: undefined
+        }
+
+        this.getWeather = this.getWeather.bind(this);
+    }
+
+    fetchWeather = async(zipCode) => {
+        if(zipCode) {
+            const apiKey = process.env.REACT_APP_API_KEY;
+            const weatherForecast = `http://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&units=imperial&appid=${apiKey}`;
+
+            try {
+                const apiCall = await fetch(weatherForecast);
+                const response = await apiCall.json();
+
+                const cityName = response.city.name;
+                const forecastData = response.list;
+
+                let weatherData = {};
+                forecastData.forEach(function(data) {
+                    const date = data.dt_txt.split(" ")[0];
+                    const humidity = data.main.humidity;
+                    const minTemp = data.main.temp_min;
+                    const maxTemp = data.main.temp_max;
+                    const dailyData = {
+                        date: date,
+                        humidity: humidity,
+                        minTemp: minTemp,
+                        maxTemp: maxTemp
+                    };
+
+                    if(weatherData[date]){
+                        dailyData.humidity = (weatherData[date].humidity + humidity) / 2;
+                        dailyData.minTemp = Math.min(weatherData[date].minTemp, minTemp);
+                        dailyData.maxTemp = Math.max(weatherData[date].maxTemp, maxTemp);
+                    }
+                    weatherData[date] = dailyData;
+                });
+
+                let weatherDetails = [];
+                for (var day in weatherData) {
+                    weatherDetails.push(weatherData[day]);
+                }
+
+                this.setState({
+                    zip: zipCode,
+                    city: cityName,
+                    data: weatherDetails,
+                    forecast: forecastData,
+                    error: ""
+                });
+            } catch (e) {
+                this.setState({
+                    error: "Invalid Search - Please Try Again"
+                })
+            }
+        }
+    }
+
+    getWeather = async (e) => {
+        e.preventDefault(); //prevent default page refresh
+        this.fetchWeather(e.target.elements.zip.value);
+    }
+
+    render() {
+        return (
+            <BrowserRouter>
+              <div className="App">
+                <Header />
+
+                <Route exact path='/' render={() => {
+                    return (
+                        <div>
+                            <Search getWeather={this.getWeather}/>
+                            <Weather city={this.state.city} zipCode={this.state.zip} data={this.state.data} fetchWeather={this.fetchWeather}/>
+                            {this.state.error && <h2>{this.state.error}</h2>}
+                        </div>
+                    );
+                }} />
+                <Route path='/:date/details' render={(props) => {
+                    return <DailyDetails {...props} forecast={this.state.forecast}/>
+                }} />
+              </div>
+            </BrowserRouter>
+        );
+    }
 }
 
 export default App;
