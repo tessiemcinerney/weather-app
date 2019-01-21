@@ -1,10 +1,12 @@
-This project was bootstrapped with[Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Assumptions Made:
+- All valid zip codes entered will be located in the United States - any zip code from another country will result in an error. 
 
-####Assumptions Made:
-All valid zip codes entered will be located in the United States - any zip code from another country will result in an error. 
+Resources Used:
+- https://openweathermap.org/api used for fetching weather data
 
-
+Read below for instructions to run/test code:
 
 ## Available Scripts
 
