@@ -16,12 +16,12 @@ class App extends Component {
         this.state = {
             zip: undefined,
             city: undefined,
-            startingDate: undefined,
             forecast: undefined,
             error: undefined
         }
 
         this.getWeather = this.getWeather.bind(this);
+        this.fetchWeather = this.fetchWeather.bind(this);
     }
 
     fetchWeather = async(zipCode) => {
@@ -30,12 +30,13 @@ class App extends Component {
             const weatherForecast = `http://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&units=imperial&appid=${apiKey}`;
 
             try {
-                const apiCall = await fetch(weatherForecast);
-                const response = await apiCall.json();
+                const apiCall = await fetch(weatherForecast); //fetch weather data
+                const response = await apiCall.json(); //save response
 
                 const cityName = response.city.name;
                 const forecastData = response.list;
 
+                //filter through forecast data and create hashmap of data per day
                 let weatherData = {};
                 forecastData.forEach(function(data) {
                     const date = data.dt_txt.split(" ")[0];
@@ -49,19 +50,23 @@ class App extends Component {
                         maxTemp: maxTemp
                     };
 
+                    //calculate averages
                     if(weatherData[date]){
                         dailyData.humidity = (weatherData[date].humidity + humidity) / 2;
                         dailyData.minTemp = Math.min(weatherData[date].minTemp, minTemp);
                         dailyData.maxTemp = Math.max(weatherData[date].maxTemp, maxTemp);
                     }
+
                     weatherData[date] = dailyData;
                 });
 
+                //array of objects containing data for each day
                 let weatherDetails = [];
                 for (var day in weatherData) {
                     weatherDetails.push(weatherData[day]);
                 }
 
+                //update state
                 this.setState({
                     zip: zipCode,
                     city: cityName,
