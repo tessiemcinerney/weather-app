@@ -19,7 +19,18 @@ Do not use a CSS framework such as bootstrap or foundation, but rather write you
 #### Resources Used:
 - https://openweathermap.org/api used for fetching weather data
 
-#### Read below for instructions to run/test code:
+#### To run locally:
+`git clone https://github.com/tessiemcinerney/weather-app.git`
+
+`cd weather-app`
+
+`npm install`
+
+`npm start`
+
+
+
+
 
 ## Available Scripts
 
