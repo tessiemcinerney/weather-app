@@ -26,7 +26,7 @@ class App extends Component {
 
     fetchWeather = async(zipCode) => {
         if(zipCode) {
-            const apiKey = "ef27fd421b6f47b7fc8b762e6e4a074d";
+            const apiKey = process.env.REACT_APP_API_KEY;
             const weatherForecast = `http://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&units=imperial&appid=${apiKey}`;
 
             try {
